@@ -30,23 +30,8 @@
     self = [super initWithCoder:aDecoder];
     
     if (self) {
+        
 
-        UIGraphicsBeginImageContextWithOptions(self.bounds.size, self.opaque, 0.0);
-        [self.layer renderInContext:UIGraphicsGetCurrentContext()];
-        UIImage *shareImage =  UIGraphicsGetImageFromCurrentImageContext();
-        UIGraphicsEndImageContext();
-        
-        UIImageView *newImgView = [UIImageView new];
-        newImgView.frame = self.bounds;
-        
-        newImgView.image = shareImage;
-        newImgView.contentMode = UIViewContentModeScaleAspectFit;
-        newImgView.tag = 100;
-        
-        
-        [self addSubview:newImgView];
-        self.placeholder = nil;
-        self.delegate = self;
         
       
     }
@@ -61,11 +46,47 @@
     [super layoutSubviews];
    
     
-    
-    [self viewWithTag:100].frame = self.bounds;
-    [self viewWithTag:100].contentMode = UIViewContentModeScaleAspectFill;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        
+        CGSize size = [self.placeholder sizeWithAttributes:
+                       @{NSFontAttributeName:
+                             [UIFont systemFontOfSize:30.0f]}];
+        
+        UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, size.width, size.height)];
+        label.text = self.placeholder;
+        
+        
+        
+        NSLog(@"TE %@", label.text);
+        
+        UIGraphicsBeginImageContextWithOptions(label.bounds.size, 0.0, 0.0);
+        [label.layer renderInContext:UIGraphicsGetCurrentContext()];
+        UIImage *shareImage =  UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        
+        UIImageView *newImgView = [UIImageView new];
+        newImgView.frame = self.bounds;
+        newImgView.center = self.center;
+
+
+        
+        newImgView.image = shareImage;
+        newImgView.contentMode = UIViewContentModeScaleAspectFill;
+        newImgView.tag = 100;
+        
+        
+        [self addSubview:newImgView];
+//        self.placeholder = nil;
+        
+        
+    });
     
     
 }
+
+
+
+
 
 @end

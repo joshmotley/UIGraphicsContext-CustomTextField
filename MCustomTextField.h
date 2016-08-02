@@ -11,5 +11,6 @@
 @interface MCustomTextField : UITextField
 
 @property (strong, nonatomic) UIImageView *neImgView;
+@property (strong, nonatomic) UILabel *label;
 
 @end
